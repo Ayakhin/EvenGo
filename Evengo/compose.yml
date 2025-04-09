@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./BACK
+    container_name: evengo-backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=evengo
+    volumes:
+      - ./BACK:/app
+
+  frontend:
+    build: ./FRONT
+    container_name: evengo-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./FRONT:/app
+    depends_on:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    container_name: evengo-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: evengo
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
